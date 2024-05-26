@@ -7,17 +7,20 @@ JSX는 리액트에 종속되는 구문이 아닌 XML과 유사한 내장형 구
 
 JSXElement, JSXAttributes, JSXChildren, JSXStrings 4가지 컴포넌트 기반으로 구성돼 있다.
 
-JSX Element: HTML의 요소(element)와 비슷한 역할을 한다
+1. JSX Element: HTML의 요소(element)와 비슷한 역할
 
-    - JSXOpeningElemnt <JSXElement Attribute(opt)>
-    - JSXClosingElement </JSXElement>
-    - JSXSelfClosingElement <JSXElement Attribute(opt) />
-    - JSXFragment <></>
+   - JSXOpeningElemnt <JSXElement Attribute(opt)>
+   - JSXClosingElement </JSXElement>
+   - JSXSelfClosingElement <JSXElement Attribute(opt) />
+   - JSXFragment <></>
 
-    - JSXElementName: JSX Element의 요소 이름으로 쓸 수 있는 것
-      - JSXIdentifier: 내부에서 사용할 수 있는 식별자, 자바스크립트 식별자 규칙과 동일 ($, _ 이외 다른 특수문자로 불가능, 숫자 시작 불가능)
+   1. JSXElementName: JSX Element의 요소 이름으로 쓸 수 있는 것
+      - JSXIdentifier: 내부에서 사용할 수 있는 식별자, 자바스크립트 식별자 규칙과 동일 ($, \_ 이외 다른 특수문자로 불가능, 숫자 시작 불가능)
+      - JSXNamespaceName: :로 최대 한개를 묶어 식별자로 사용할 수 있다.
+      - JSXMemberExpression .로 여러개를 묶어 식별자로 사용할 수 있다.
 
 ```js
+// JSXIdentifier 예제
 // 가능
 function Valid() {
     return <$></$>
@@ -29,26 +32,28 @@ function Invalid() {
 }
 ```
 
-        - JSXNamespaceName: :로 최대 한개를 묶어 식별자로 사용할 수 있다.
-        - JSXMemberExpression .로 여러개를 묶어 식별자로 사용할 수 있다.
-    - JSXAttributes: JSXElement애 부여할 수 있는 속성을 의미
-      - JSXSpreadAttribute: 자바스크립트의 전개연산자처럼 사용할 수 있다. (ex. {...AssignExpression})
-      - JSXAttribute: 속성을 나타내는 키와 값으로 표현 가능, JSXAttributeName은 키 값, JSXAttributeValue는 키에 할당할 수 있는 값.
-      - JSXAttributeValue는 큰 따옴표, 작은 따옴표, 자바스크립트 값을 할당하는 { value }, JSX요소 자체를 사용할 수 있다.
+2. JSXAttributes: JSXElement에 부여할 수 있는 속성을 의미
+
+   - JSXSpreadAttribute: 자바스크립트의 전개연산자처럼 사용할 수 있다. (ex. {...AssignExpression})
+   - JSXAttribute: 속성을 나타내는 키와 값으로 표현 가능, JSXAttributeName은 키 값, JSXAttributeValue는 키에 할당할 수 있는 값.
+   - JSXAttributeValue는 큰 따옴표, 작은 따옴표, 자바스크립트 값을 할당하는 { value }, JSX요소 자체를 사용할 수 있다.
 
 ```js
+// JSXAttributeName 예제
 function Valid() {
   return <DropDown.Title canuse:key="value"></DropDown.Title>;
 }
 ```
 
-    - JSXChildren: JSXElement의 자식 값.
-      - JSXChild: 기본 단위로 0개 이상 가질 수 있다
-        - JSXText: {, <, >, }를 제외한 문자열
-        - JSXElement: 값으로 다른 JSX 요소가 들어갈 수 있다
-        - JSXFragment: <></>를 사용할 수 있다.
-        - { JSXChildExpression (optional) }: JSXChildExpression은 자바스크립트의 AssignmentExpression이다.
-    - JSXStrings: HTML에서 사용 가능한 문자열은 모두 JSXStrings에서도 가능하다.
+3. JSXChildren: JSXElement의 자식 값
+
+   - JSXChild: 기본 단위로 0개 이상 가질 수 있다
+     - JSXText: {, <, >, }를 제외한 문자열
+     - JSXElement: 값으로 다른 JSX 요소가 들어갈 수 있다
+     - JSXFragment: <></>를 사용할 수 있다.
+     - { JSXChildExpression (optional) }: JSXChildExpression은 자바스크립트의 AssignmentExpression이다.
+
+4. JSXStrings: HTML에서 사용 가능한 문자열은 모두 JSXStrings에서도 가능
 
 ### JSX 예제
 
