@@ -70,22 +70,6 @@ Symbol.for('hello') === Symbol.for('hello') //true
 
 [[1. Data Type]]
 
-// 문제 1 
-```js
-var hello = {
-	greet: 'hello, world';
-}
-var hi = {
-	greet: 'hello, world';
-}
-
-console.log(hello === hi); // false
-console.log(hello.greet === hi.greet) // true
-```
-예제에서 hello와 hi가 같은 값을 가진 객체일 때 hello == hi 는 false인데 hello.프로퍼티 == hi.프로퍼티 는 true인 이유
-
-객체 간의 비교는 값이 같더라도 `false`가 나올 수 있다.
-
 ## 비교를 위한 방법
 
 | 이름      | 설명                                                                                |
@@ -331,10 +315,6 @@ add를 sum에 담는 로직인데 외부에서 add를 호출하려고 하면 할
 
 [[2. Execution Context]]
 
-// 문제 2
-실행 컨텍스트에서 호이스팅을 일으키는 요소는?
-
-(EnvironmentRecord가 미리 함수 선언문, 변수명을 메모리에 등록해놓고 실행 컨텍스트가 수행되는 작용)
 함수에 대한 선언을 실행 전에 미리 메모리에 등록하는 작업을 의미한다.
 
 함수 표현식은 변수에 함수를 할당하기 때문에 호이스팅이 일어날 때 해당 변수만 (`var`일 경우에만) 호이스팅되고 그 변수는 `undefined` 상태로 초기화 된다.
@@ -1087,6 +1067,890 @@ function heavyJob() {
 aButton.addEventListener("click", heavyJob);
 
 // 클로저를 이용한 처리
-
+const bButton = document.getElementById("a");
+  
+function heavyJobWithClosure() {
+  const longArr = Array.from({ length: 10000000 }, (_, i) => i + 1);
+  return function () {
+    console.log(longArr.length);
+  };
+}
+  
+const innerFunc = heavyJobWithClosure();
+bButton.addEventListener("click", function () {
+  innerFunc();
+});
 ```
 
+크롬 개발자 도구로 보면 클로저를 활용하는 쪽이 압도적으로 부정적인 영향을 미친다.
+
+![[closer.jpg]]
+40mb를 받고 시작하는 클로저의 모습을 볼 수 있다.
+
+클로저의 기본 원리에 따라 클로저가 선언된 순간 내부 함수는 외부 함수의 선언적인 환경을 기억하고 있어야 하므로 이를 어디에서 사용하는지 여부에 관계 없이 저장해 둔다.
+
+위 코드로 보면 longArr가 어디에 사용될지 모르기 때문에 메모리에 일단 저장하면서 메모리에 영향을 미치는 것이다.
+
+일반 함수의 경우 클릭시 스크립트 실행이 클로저보다 길게 걸리지만 클릭과 동시에 선언, 스코프 내에서 길이를 구하는 작업까지 끝내기 때문에 메모리에 영향을 주지 않는다.
+
+![[closer2.jpg]]
+배열을 메모리에 갖고 있지 않은 일반 함수의 모습을 볼 수 있다.
+
+클로저의 개념은 외부 함수를 기억하고 이를 내부 함수에서 가져다 쓰는 메커니즘인데 이는 성능에 영향을 미친다. 클로저에 꼭 필요한 
+
+작업만 남겨두지 않는다면 메모리를 불필요하게 잡아먹는 결과를 야기할 수 있고, 마찬가지로 클로저 사용을 적절한 스코프로 가둬두지 
+
+않는다면 성능에 악영향을 미친다.
+
+## 이벤트 루프와 비동기 통신의 이해
+
+JS는 싱글 스레드에서 작동한다. 그래서 한 번에 하나의 작업만 동기 방식으로 처리할 수 있다.
+
+동기(synchronous) : 직렬 방식으로 작업을 처리하는 것, 요청이 시작하고 응답을 받은 후에야 다음 작업 처리
+
+비동기(Asynchronous) : 병렬 방식으로 작업을 처리하는 것, 요청이 시작한 후 응답과 관계 없이 다음 작업 처리
+
+사용자가 검색어를 입력해 검색을 위한 네트워크 요청이 발생한 순간에도 다른 작업을 처리할 수 있다. (비동기적 작업 방식)
+
+리액트에서는 16 버전에 접어들면서 비동기식으로 작동하는 방법이 소개 되었다.
+
+## 싱글 스레드 자바스크립트
+
+과거, 프로그램을 실행하는 단위가 오직 프로세스 뿐이었다.
+
+process : 프로그램을 구동해 프로그램의 상태가 메모리 상에서 실행되는 작업 단위
+
+현재, 하나의 프로그램에 여러가지 작업이 필요해 졌고 더 작은 실행 단위인 thread가 탄생했다.
+
+thread: 하나의 process에는 여러 개의 thread를 만들 수 있고, thread 끼리는 메모리를 공유할 수 있다. 여러 작업 동시 수행
+
+JS는 기본적으로 싱글 쓰레드 이다.
+
+## JS가 멀티 쓰레드가 아닌 이유
+
+1. 멀티 쓰레드는 내부적으로 처리가 복잡하며 같은 자원에 대해 여러 번 수정하는 등 동시성 문제가 발생할 수 있기에 이에 대한 처리가 필요하다.
+2. 각각 격리되어 있는 process와 다르게 하나의 thread가 문제가 생기면 다른 thread도 문제가 발생할 수 있다.
+3. JS이 멀티 스레딩을 지원해서 동시에 여러 쓰레드가 DOM을 조작할 수 있었다면 메모리 공유로 인해 동시에 같은 자원에 접근하게 되고  이 때문에 타이밍 이슈가 발생할 수 있고 DOM 표시에 큰 문제를 야기할 수 있다.
+
+## 싱글 쓰레드
+
+자바스크립트 코드의 실행이 하나의 스레드에서 순차적으로 이루어진다는 것을 의미
+
+하나의 작업이 끝나기 전까지는 뒤이은 작업이 실행되지 않는다.
+
+JS에서는 동기식과 다르게 비동기식 함수를 선언하면 요청 > 응답 과정과 상관 없이 여러 작업을 동시에 수행한다.
+
+이 과정은 "이벤트 루프" 라는 개념을 통해 설명할 수 있다.
+
+## 이벤트 루프
+
+JS 런타임 외부에서 자바스크립트의 비동기 실행을 돕기 위해 만들어진 장치
+
+런타임 외부라 하면 V8 같은 js 런타임 엔진 같은 외부 요소들을 뜻한다.
+
+## 호출 스택
+
+## 동기적 코드
+
+call stack은 JS에서 수행해야 할 코드나 함수를 순차적으로 담아두는 스택
+
+```js
+function bar(){
+	console.log('bar');
+}
+
+function baz(){
+	console.log('baz');
+}
+
+function foo(){
+	console.log('foo');
+	bar()
+	baz()
+}
+
+foo()
+```
+![[Deep dive 1_240525_215758.jpg]]
+
+`이벤트 루프`는 호출 스택이 비어 있는지 확인하고 비어 있지 않다면 JS엔진을 이용해 해당 코드를 실행한다.
+
+이는 순차적으로 단일 스레드에서 일어난다. (동시에 일어날 수 없다.)
+
+## 비동기적 코드
+
+```js
+function bar() {
+  console.log("bar");
+}
+  
+function baz() {
+  console.log("baz");
+}
+  
+function foo() {
+  console.log("foo");
+  setTimeout(bar(), 0);
+  baz();
+}
+  
+foo();
+```
+
+![[Deep dive 1_240526_075025.jpg]]
+
+위 그림을 보면 setTimeout이 0초 후에 실행되는 걸로 코드에는 적혀 있지만 비동기기 때문에 보장되지 않는다는 것을 알 수 있다.
+
+## Task Queue
+
+선택된 큐 중 실행 가능한 가장 오래된 task를 가져와야 하기 때문에 `set` 자료구조를 사용한다.
+
+Task queue에서 실행해야할 task는 비동기 함수의 callback function이나 event handler를 뜻한다.
+
+이벤트 루프에는 Task queue가 최소 한개 이상 있다. 그래서 이벤트 루프의 역할은 다음과 같이 정리할 수 있다.
+
+> 호출 스택에 실행 중인 코드가 있는지 그리고 task queue에 대기 중인 함수가 있는지 반복해서 확인
+> 
+> 호출 스택이 비어 있고 task queue에 작업이 대기중이라면 가장 오래된 것부터 순차적으로 호출 스택에 올린다.
+
+ setTimeout이나 fetch같은 네트워크 요청, 이런 비동기 함수의 수행은 task queue가 할당하는 별도의 thread에서 수행된다. (브라우저나 Node.js같은 Web API에서 해당 코드가 실행되고 콜백이 task queue로 들어간다.)
+
+## Micro Task Queue
+
+이벤트 루프의 구성 요소중 하나이며 Task queue와 다른 task를 처리한다.
+
+`Promis`같은걸 처리하며 task queue보다 우선권을 갖는다.
+
+micro task queue가 비어야 task queue가 실행될 수 있다.
+
+```js
+function foo() {
+  console.log("foo");
+}
+
+function bar() {
+  console.log("bar");
+}
+
+function baz() {
+  console.log("baz");
+}
+
+setTimeout(foo, 0);
+
+Promise.resolve().then(bar).then(baz);
+```
+
+## Task Queue와 Micro Task Queue의 차이
+
+| 이름             | 대표 작업                                                    |
+| ---------------- | :----------------------------------------------------------- |
+| task queue       | setTimeout, setInterval, setImmediate                        |
+| micro task queue | process.nextTick, Promises, queueMicroTask, MutationObserver |
+## 렌더링 시기
+
+```js
+for (let i = 0; i <= 100000; i++) {
+  창.innerHTML = i;
+} // 100000
+```
+
+동기식 코드는 모든 호출이 끝나고 렌더링을 한다.
+
+```js
+for (let i = 0; i <= 100000; i++) {
+  setTimeout(() => {
+    창.innerHTML = i;
+  }, 0);
+} // 0 1 2 3...
+```
+
+Task Queue 코드는 Task Queue에 콜백이 들어가기 전까지 대기 시간 후에 호출 스택에 하나씩 올라오면서 하나 될때마다 렌더링을 한다.
+
+```js
+for (let i = 0; i <= 100000; i++) {
+  queueMicrotask(() => {
+    창.innerHTML = i;
+  }, 0);
+} // 100000
+```
+
+Micro Task Queue 코드는 동기 코드와 같이 마지막에 렌더링이 일어난다.
+
+```js
+console.log("a");
+  
+setTimeout(() => {
+  console.log("b");
+}, 0);
+
+Promise.resolve().then(() => {
+  console.log("c");
+});
+  
+window.requestAnimationFrame(() => { 
+// 브라우저에 다음 리페인트 전에 콜백 함수 호출을 가능하게 하는 메소드
+  console.log("d");
+});
+
+// a c d b
+// 브라우저 렌더링은 Micro task queue와 task queue 사이에서 일어난다.
+```
+
+## React와 관련된 JS 문법
+
+브라우저의 종류는 다양하기 때문에 모든 최신 문법을 사용할 수 없다. 
+
+이를 해결하기 위해서 바벨이라는 도구가 등장하였고 이 도구는 최신 문법을 설정된 버전으로 트랜스파일링해주는 역할을 한다.
+
+## 구조 분해 할당
+
+배열 또는 객체의 값을 분해해 개별 변수에 즉시 할당하는 것
+
+## 배열의 구조 분해 할당
+
+```js
+const array = [1,2,3,4,5]
+
+const [first, second, third, ...arrayRest] = array;
+// first 1
+// second 2
+// third 3
+// arrayRest [4,5]
+```
+
+배열의 구조 분해 할당은 ,의 위치에 따라 값이 결정된다.
+
+```js
+const array = [1,2,3,4,5]
+
+const [first, , , ,fifth] = array;
+// first 1
+// fifth 5
+```
+
+기본값을 넣을 수도 있다. (배열의 길이가 짧거나 값이 없는 경우에 사용되는 값)
+
+```js
+const array = [1,2,3,4,5]
+
+const [first = 10, , , ,fifth] = array;
+// first 1
+// fifth 5
+
+const [a=1, b=1, c=1, d=1, e=1] = [undefined, null, 0, '']
+a // 1
+b // null
+c // 0
+d // ''
+e // 1
+```
+
+js에서 기본값을 사용할 수 있는 경우는 `undefined`일 때뿐이다.
+
+```js
+const array = [1, 2, 3, 4, 5];
+const [first, second, third, ...arrayRest] = array;
+
+var array2 = [1, 2, 3, 4, 5];
+const first2 = array[0];
+const second2 = array[0];
+const third2 = array[0];
+const arrayRest2 = array.slice(3);
+```
+
+배열의 구조 분해 할당은 바벨에서 위와 같이 사용된다.
+
+## 객체의 구조 분해 할당
+
+객체에서 값을 꺼내온 뒤 할당하는 것
+
+배열 구조 분해 할당과는 객체 내부 이름으로 꺼내온다는 차이가 있다.
+
+```js
+const object = {
+  a: 1,
+  b: 2,
+  c: 3,
+  d: 4,
+  e: 5,
+};
+
+// 기본값도 넣을 수 있다.
+const { a, b, c, z = 10 } = object;
+// a 1
+// b 2
+// c 3
+// z 10
+// objectRest = {d:4, e:5}
+
+// 이름을 변경해서 할당하는 것도 가능하며
+const { a:first, b:second, c:third, ...objectRest2} = object;
+// first 1
+// second 2
+// third 3
+// objectRest2 = {d:4, e:5}
+
+
+const key = 'a';
+//computed property key도 사용 가능하다. 대신 네이밍이 필요하다.
+const {[key]: a} = object;
+```
+
+리액트 컴포넌트인 props에서 값을 꺼내올 때 사용하는 방식이다.
+
+```js
+function Sample({a,b}){
+	return a+b;
+}
+
+Sample({a:3, b:5}) // 8
+```
+
+바벨에서 트랜스파일링시 번들링 크기가 굉장히 크기 때문에 ES5을 고려해야한다면 lodash.omit이나 rambda.omt 같은 라이브러리를 사용해보면 좋다.
+
+## Spread Syntax
+
+배열이나 객체, 문자열과 같이 순회할 수 있는 값에 대해 말 그대로 전개해 간결하게 사용할 수 있는 구문
+
+## Array Spread Syntax
+
+```js
+const arr1 = ["a", "b"];
+const arr2 = arr1;
+  
+arr1 === arr2; // true
+  
+const arr1 = ["a", "b"];
+const arr2 = [...arr1];
+
+arr1 === arr2;
+// 값만 복사되고 참조는 다르기에 false
+```
+
+기존 배열에 영향을 미치지 않고 배열을 복사할 수 있다.
+
+## Object Spread Syntax
+
+```js
+const obj1 = { a: 1, b: 2 };
+const obj2 = { c: 3, d: 4 };
+  
+const newObj = { ...obj1, ...obj2 };
+// { "a":1, "b":2, "c":3, "d":4 }
+
+const obj3 = { c: 5 };
+```
+
+같은 프로퍼티가 있으면 뒤에 있는 객체로 덮어 씌운다.
+
+```js
+// 순서에 따라서 다른 객체가 될 수 있으니 주의해야 한다.
+const newObj2 = {...newObj, ...obj3};
+// { "a":1, "b":2, "c":5, "d":4 }
+const newObj2 = {...obj3, ...newObj};
+// { "a":1, "b":2, "c":3, "d":4 }
+```
+
+바벨에서는 아래와 같이 구현된다.
+
+```js
+// 트랜스파일링 전
+var arr1 = ['a','b'];
+var arr2 = [...arr1, 'c','d','e'];
+
+// 트랜스파일링 후
+var arr1 = ['a','b'];
+var arr2 = [].concat(arr1, ['c','d','e'])
+```
+
+위의 경우는 간단하지만 객체 분해 할당과 같이 트랜스파일링되서 번들링 크기가 커지는 경우가 있기 때문에 
+
+트랜스파일링이 필요할 경우 주의해야 한다.
+
+## Object shorthand assignment
+
+객체를 선언할 때 객체에 넣고자 하는 key, value를 가지고 있는 변수가 이미 있다면 간결하게 넣어주는 방식
+
+```js
+const a = 1;
+const b = 2;
+
+const obj = {
+	a,
+	b,
+}
+
+// {a:1, b:2}
+```
+
+트랜스파일 이후에도 큰 부담이 없다. `const obj = {a:a, b:b}`
+
+## Array prototype method
+
+## map
+
+인수로 전달받은 배열과 똑같은 길이의 새로운 배열을 반환
+
+```js
+const arr = [1, 2, 3, 4, 5];
+const doubledArr = arr.map((v) => v * 2);
+```
+
+리액트에서는 컴포넌트를 특정 배열을 기반으로 반환할 때 사용한다.
+
+```jsx
+const arr = [1, 2, 3, 4, 5];
+const Elements = arr.map((item) => {
+  return <Fragment key={item}>{item}</Fragment>;
+});
+```
+
+## filter
+
+인수로 받은 콜백 함수가 truthy 조건일 경우에만 해당 원소를 반환하는 메서드
+
+```js
+const arr = [1, 2, 3, 4, 5];
+const evenArr = arr.filter((v) => v % 2 === 0);
+```
+
+## reduce
+
+콜백 함수, 초깃값을 갖고 배열이나 객체, 또는 그 외의 다른 무언가를 반환
+
+```js
+const arr = [1, 2, 3, 4, 5];
+const plusArr = arr.reduce((result, item) => {
+  return result + item;
+}, 0);
+```
+
+콜백 함수의 (reducer) 리턴값은 다음 콜백 함수의 result가 되며 이 로직대로 최종 누적값이 리턴된다.
+
+number 뿐만 아니라 array를 object로 변환하는 것처럼 다양하게 사용할 수 있지만 직관적이지 않아서 적절하게 사용하는 것이 필요하다.
+
+filter와 map의 조합으로 처리해도 되는 경우가 많다. (하지만 두번 순회하기에 성능은 더 안 좋다.)
+
+```js
+const arr = [1, 2, 3, 4, 5];
+  
+const result1 = arr.filter((item) => item % 2 === 0).map((item) => item * 100);
+  
+const result2 = arr.reduce((result, item) => {
+  if (item % 2 === 0) {
+    result.push(item * 2);
+  }
+  return result;
+}, []);
+```
+## forEach
+
+배열을 순회하면서 콜백 함수를 실행하는 method
+
+```js
+const arr = [1, 2, 3];
+  
+arr.forEach((item) => console.log(item));
+// 1,2,3
+```
+
+반환값은 `undefined`로 의미가 없다.
+
+프로세스 종료, 에러 리턴 이외에는 순회를 멈출 수 없다.
+
+```js
+function run() {
+  const arr = [1, 2, 3];
+  arr.forEach((v) => {
+    console.log(v);
+    if (item === 1) {
+      console.log("finished");
+      return;
+    }
+  });
+}
+
+run(); // 1 finished 2 3
+```
+
+무조건 O(n)이 실행된다는 이야기이기 때문에 최적화시 고려해야할 사항 중 하나이다.
+
+## 삼항 조건 연산자
+
+```js
+const value = 10;
+const result = value & (2 === 0) ? "even" : "odd";
+// even
+```
+
+React에서는 조건부로 렌더링 하기 위해 사용한다.
+
+```jsx
+function Component({ condition }) {
+  return <>{condition ? "참" : "거짓"}</>;
+}
+```
+
+가독성이 안 좋기 때문에 삼항 조건 연산자를 중첩해서 사용하는 것은 지양하는 것이 좋다.
+
+## TS
+
+동적 언어인 JS는 실행했을 때만 에러를 확인할 수 있는데 TS는 타입 체크를 정적으로 런타임이 아닌 빌드(트랜스파일) 타임에 수행할 수 있게 해주어 코드 안정성을 늘린다.
+
+```ts
+function test(a:number, b:number){
+	return a/b;
+}
+
+// tsc로 이 코드를 JS로 트랜스파일하면 다음과 같은 에러가 난다.
+test('안녕하세요', '하이' )
+// Argument of type 'string' iss not assignable to parameter of type 'number'
+```
+
+## React에서 TS 활용
+
+## any 대신 unknown 사용
+
+`any`는  TS를 포기하겠다는 것이다. 따라서 대신 `unknown`을 사용하는 것이 좋은데 이는 모든 값을 할당할 수는 있지만 바로 사용할 수는 없게 된다.
+
+```ts
+function doSomething(callback: unknown){
+	callback(); // 'callback' is of type 'unknown'
+}
+```
+
+아래와 같이 callback의 타입을 지정해줘야 사용할 수 있다.
+
+```ts
+function doSomething(callback: unknown){
+	if (typeof callback === 'function'){
+		callback()
+		return
+	}
+
+	throw new Error('callback은 함수여야 합니다.')
+}
+```
+
+`never`는 어떤 타입도 들어올 수 없을 때를 의미하는데
+
+```ts
+type what1 = string & number; // never
+type what2 = ('hello' | 'hi' ) & 'react'; // never
+```
+
+Class Component를 선언할 때 props는 없지만 state가 존재하는 상황에서 이 빈 props, 정확히는 어떠한 props도 받아들이지 않는다는 뜻으로 사용이 가능하다.
+
+```tsx
+// key string지만 value never 가 들어가서 어떠한 값도 들어갈 수 없게 된다.
+type Props = Record<string, never>;
+type State = {
+  counter: 0;
+};
+
+class SampleComponent extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      counter: 0,
+    };
+  }
+  render() {
+    return <>...</>;
+  }
+}
+  
+export default function App() {
+  return (
+    <>
+      {/* OK */}
+      <SampleComponent />
+      {/* Type 'string' is not assignable to type 'never' */}
+      <SampleComponent hello="world" />
+    </>
+  );
+}
+```
+
+## type guard 적극 활용
+
+## instanceof 와 typeof
+
+`instanceof`는 지정한 인스턴스가 특정 클래스의 인스턴스인지 확인할 수 있는 연산자이다.
+
+```ts
+class UnAuthorizedError extends Error {
+  constructor() {
+    super();
+  }
+  
+  get message() {
+    return "인증 실패";
+  }
+}
+  
+class UnExpectedError extends Error {
+  constructor() {
+    super();
+  }
+  
+  get message() {
+    return "예상치 못한 에러";
+  }
+}
+  
+async function fetchSomethingg() {
+  try {
+    const response = await fetch("url");
+    return await response.json();
+  } catch (e) {
+    // e는 unknown
+  
+    if (e instanceof UnAuthorizedError) {
+      // do something
+    }
+  
+    if (e instanceof UnExpectedError) {
+      // do something
+    }
+  
+    throw e;
+  }
+}
+```
+
+unknown인 e를 타입 가드를 통해 타입을 좁힘으로써 원하는 처리 내용을 추가할 수 있다.
+
+typeof 연산자는 앞서 예제에서 볼 수 있었던 것처럼 특정 요소에 대해 자료형을 확인하는 데 사용된다.
+
+```ts
+function logging(value: string | undefined){
+	if (typeof value === 'string'){
+		console.log(value)
+	}
+
+	if (typeof value === 'undefined'){
+		// nothing to do
+		return
+	}
+}
+```
+
+## in
+
+property in object로 사용되는데, 어떤 객체에 키가 존재하는지 확인하는 용도로 사용
+
+```ts
+interface Student {
+  age: number;
+  score: number;
+}
+  
+interface Teacher {
+  name: string;
+}
+  
+function doSchool(person: Student | Teacher) {
+  if ("age" in person) {
+    person.age; // Student
+    person.score;
+  }
+  
+  if ("name" in person) {
+    person.name; // Teacher
+  }
+}
+```
+
+## Generic
+
+함수나 클래스 내부에서 단일 타입이 아닌 다양한 타입에 대응할 수 있도록 도와주는 도구
+
+제네릭을 사용하면 타입만 다른 비슷한 작업을 하는 컴포넌트를 단일 제네릭 컴포넌트로 선언해 간결하게 작성할 수 있다.
+
+```ts
+function getFirstAndLast<T>(list: T[]): [T, T] {
+  return [list[0], list[list.length - 1]];
+}
+  
+const [first, last] = getFirstAndLast([1, 2, 3, 4, 5]);
+  
+first; // number
+last; // number
+  
+const [first, last] = getFirstAndLast(["a", "b", "c", "d", "e"]);
+  
+first; // string
+last; // string
+```
+
+React에서 제네릭을 사용하는 코드는 useState 같은 것들이 있다.
+
+```tsx
+function Component(){
+  // state: string
+  const [state, setState] = useState<string>('')
+}
+```
+
+제네릭은 여러 개 사용할 수 있다.
+
+```tsx
+function multipleGeneric<First, Last>(a1: First, a2: Last): [First, Last] {
+  return [a1, a2];
+}
+  
+const [a, b] = multipleGeneric<string, boolean>("string", true);
+
+a // string
+b // boolean
+```
+
+## Index Signiture
+
+`[typeName: type]:type`으로 키에 원하는 타입을 부여할 수 있다. 
+
+```ts
+type Hello = {
+  [key: string]: string;
+};
+
+const hello: Hello = {
+	hello: 'hello',
+	hi: 'hi',
+}
+
+hello['hi'] // hi
+hello['안녕'] //undefined
+```
+
+하지만 위 코드처럼 string같은 넓은 범위의 타입을 key type으로 주게 되면 존재하지 않는 키에 접근할 수 있게 되버릴 수 있다.
+
+따라서 동적으로 선언시키는 것을 지양하고 객체의 타입도 좁혀주는 것이 좋다.
+
+## Record 사용
+
+```ts
+type Hello = Record<"hello" | "hi", string>;
+const hello: Hello = {
+  hello: "hello",
+  hi: "hi",
+};
+```
+
+## 타입을 사용해서 좁힌 index signature
+
+
+```ts
+type  Hello = {{[key in 'hello'|'hi']: string}}
+const hello: Hello = {
+  hello: 'hello',
+  hi: 'hi',
+}
+```
+
+## mapping시 주의사항
+
+```ts
+Object.keys(hello).map((key)=>{
+  const value = hello[key]
+  return value
+}) // Element implicity  has an 'any' type because expression of type 'string' can't be used to index type 'Hello'.
+```
+
+string이라는 타입을 Hello type 인덱스로 사용할 수 없어서 any type으로 다 설정이 될 것이라는 건데
+
+이는 다음 코드를 보면 알 수 있다.
+
+```ts
+const result = Object.keys(hello) // string[]
+```
+
+hello의 키를 뽑은 result가 `string[]`로 지정되어 있어 string을 프로퍼티 키로 넣을 수 없다고 하는 것이다.
+
+다음 세가지 해결방법이 존재한다.
+
+1. as로 keyof type을 지정해주는 것
+```ts
+(Object.keys(hello) as Array<keyof Hello>).map((key) => {
+  const value = hello[key];
+  return value;
+});
+```
+
+2. 이를 이용하여  함수를 만들어서 추상화할 수 있다.
+```ts
+// 타입 가드 함수를 만드는 방법
+function keysof<T extends Object>(obj: T): Array<keyof T> {
+  return Array.from(Object.keys(obj)) as Array<keyof T>;
+}
+// T extends Object로 obj는 Object내에서만 들어갈 수 있게 제한
+
+keysof(hello).map((key)=>{
+  const value = hello[key]
+  return value
+})
+```
+
+3. 가져온 키를 단언하는 방법
+```ts
+Object.keys(hello).map((key)=>{
+  const value = hello[key as keyof Hello]
+  return value
+})
+```
+
+## Object.keys를 string[]을 내보내도록 만든 이유
+
+Duck Typing: 오리처럼 걷고 헤엄치고 소리 내면 무엇이든 오리라고 부를 수 있다. (객체가 필요한 변수와 메서드만 지니고 있으면 해당 타입에 속하도록 인정)
+
+JS는 객체의 타입에 구애 받지 않고 객체의 타입에 열려 있다. 그래서 TS도 그 특징을 맞춰 줘야 하며 모든 키가 들어올 수 있다는 가능성이 열려 있는 key에 포괄적으로 대응하기 위해 `string[]`으로 타입을 제공하는 것이다.
+
+## TS 전환 가이드
+
+## tsconfig.json 먼저 작성하기
+
+```json
+{
+	"compilerOptions" :{
+		"outDir": "./dist",
+		// .ts나 .js가 만들어진 결과를 넣어두는 폴더
+		"allowJs": true,
+		// .js 파일을 허용하는지 여부
+		"target": "es5"
+		// 결과물이 될 JS 버전 지정
+	},
+	"include": [."/src/**/*"]
+	// 트랜스파일할 JS와 TS 파일 지정
+}
+```
+
+## JSDoc와 @ts-check를 활용해 점진적으로 전환하기
+
+```js
+// @ts-check
+
+/**
+* @type {string}
+*/
+const str = true
+```
+
+// @ts-check와 JSDoc으로 자바스크립트임에도 타입을 제한시킬 수 있다.
+
+하지만 손이 많이 가기 때문에 ts로 바로 작업하는 편이 빠르다.
+
+## 타입 기반 라이브러리를 위한 @types 모듈 설치
+
+`@types` TS로 작성되지 않은 코드에 대한 타입을 제공하는 라이브러리
+
+ex) React의 경우 @types/react, @types/react-dom 에 정의
+
+Cannot find module 'lodash' or its corresponding type declarations 라는 오류 메시지를 import에서 보면 이 라이브러리를 설치해야 되는 상태인 것이다.
+
+## 파일 단위로 조금씩 전환하기
+
+상수나 유틸처럼 별도의 의존성이 없는 파일부터 시작하자
+
+converter가 라이브러리로 존재 하기는 하지만 TS 지식 향상에서는 좋은 생각이 아니다.
