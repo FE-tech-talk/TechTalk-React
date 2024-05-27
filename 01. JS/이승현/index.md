@@ -1,11 +1,11 @@
-## JS 동등 비교
+## <mark style="background: #FF5582A6;">JS 동등 비교</mark>
 
 리액트 컴포넌트의 렌더링이 일어나는 이유 중 하나는 props의 동등 비교이다.
 (객체의 얕은 비교를 기반으로 이루어진다.)
 
 이외에 가상 DOM과 실제 DOM의 비교, 리액트 컴포넌트가 렌더링할지를 판단하는 방법, 변수나 함수의 메모이제이션 등 모두 동등 비교를 기반으로 한다.
 
-## Data Type
+## <mark style="background: #FFB86CA6;">Data Type</mark>
 
 | 타입                   | 이름      | 설명                                                                                                                                                                                                                      |
 | ---------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -18,11 +18,11 @@
 |                        | BigInt    | number의 숫자 제한을 극복하기 위해 타입,                                                                                                                                                                                  |
 | object/ reference type | object    |                                                                                                                                                                                                                           |
 
-## Primitive type
+## <mark style="background: #FFF3A3A6;">Primitive type</mark>
 
 객체가 아닌 모든 타입
 
-## falsy
+## <mark style="background: #BBFABBA6;">falsy</mark>
 
 | 값              | 타입           | 설명                                                     |
 | --------------- | -------------- | -------------------------------------------------------- |
@@ -35,7 +35,7 @@
 falsy가 아닌 값은 전부 truthy
 (고로 객체와 배열은 비어 있어도 true이다.)
 
-## BigInt
+## <mark style="background: #BBFABBA6;">BigInt</mark>
 
 ```js
 Math.pow(2,53) === Math.pow(2,53)+1 // true
@@ -48,7 +48,7 @@ const bigInt = 7289347823984n; // n을 붙히거나
 const bigInt = BigInt('7289347823984'); // BigInt() 함수를 사용해서 표현한다.
 ```
 
-## Symbol
+## <mark style="background: #BBFABBA6;">Symbol</mark>
 
 ```js
 const key1 = Symbol('key'); // Synbol() 함수를 사용해서 표현한다.
@@ -60,9 +60,9 @@ key1 === key2; // false
 Symbol.for('hello') === Symbol.for('hello') //true
 ```
 
-## Primitive와 Object의 차이
+## <mark style="background: #FFF3A3A6;">Primitive와 Object의 차이</mark>
 
-## 값을 저장하는 방식
+## <mark style="background: #BBFABBA6;">값을 저장하는 방식</mark>
 
 | 구분      | Primitive            | Object                                                       |
 | --------- | -------------------- | ------------------------------------------------------------ |
@@ -70,13 +70,14 @@ Symbol.for('hello') === Symbol.for('hello') //true
 
 [[1. Data Type]]
 
-## 비교를 위한 방법
+## <mark style="background: #BBFABBA6;">비교를 위한 방법</mark>
 
 | 이름      | 설명                                                                                |
 | --------- | :---------------------------------------------------------------------------------- |
 | Object.is | 형변환 없이 타입이 다르면 false                                                     |
 | ==        | 양쪽이 같은 타입이 아니라면 형변환을 한 후 비교                                     |
 | ===       | -, +사이, Number.NaN과 NaN 사이, NaN과 0/0 사이를 구분하지 못하는 Object.is와 같다. |
+
 Object.is도 객체 비교에서는 다른 두 비교방법과 유사하다.
 
 ```js
@@ -91,7 +92,7 @@ Object.is(a,b) //true
 a === b // true
 ```
 
-## React 동등 비교
+## <mark style="background: #FFB86CA6;">React 동등 비교</mark>
 
 리액트에서는 `Object.is`를 이용해서 동등 비교를 진행한다.
 
@@ -100,7 +101,7 @@ ES6에서 제공하는 기능이기에 Polyfill을 함께 사용한다.
 ```ts
 function is(x: any, y: any){
 	return (
-		(x === y && (x !== 0 || 1/x === 1/y)) || (x !==x && y !== y) // esssslint-disable-line no-self-compare
+		(x === y && (x !== 0 || 1/x === 1/y)) || (x !==x && y !== y) // eslint-disable-line no-self-compare
 	)
 }
 
@@ -161,7 +162,7 @@ export default shallowEqual;
 
 key를 꺼내서 다시 한번 비교를 수행한다. 
 
-(객체 간의 얕은 비교를 한번 더 수행 (첫 번째 깊이에 존재하는 값만 비교) )
+(객체 간의 얕은 비교를 한번 더 수행 (첫 번째 깊이에 존재하는 값 비교) )
 
 ```js
 Object.is({hello: 'world'},{hello: 'world'}) // false
@@ -238,7 +239,7 @@ export default function App() {
 
 button을 누르면 2 depth props인 DeeperProps가 연결된 memo의 경우 메모이제이션이 정상적으로 이루어지지 않는 것을 확인할 수 있다.
 
-## 함수
+## <mark style="background: #FF5582A6;">함수</mark>
 
 작업을 수행하거나 값을 계산하는 등의 과정을 표현하고, 이를 하나의 블록으로 감싸서 실행 단위로 만들어 놓은 것
 
@@ -255,9 +256,9 @@ function Component(props){
 }
 ```
 
-## 함수를 정의하는 4가지 방법
+## <mark style="background: #FFB86CA6;">함수를 정의하는 4가지 방법</mark>
 
-## 함수 선언문
+## <mark style="background: #FFF3A3A6;">함수 선언문</mark>
 
 ```js
 function add(a,b){
@@ -281,7 +282,7 @@ sum(10,24); // 34
 
 이름을 가진 함수 리터럴은 코드 문맥에 따라 선언문, 표현식 둘 다로써 사용되어질 수 있다.
 
-## 함수 표현식
+## <mark style="background: #FFF3A3A6;">함수 표현식</mark>
 
 `일급 객체` : 다른 객체들에 일반적으로 적용 가능한 연산을 모두 지원하는 객체
 
@@ -311,7 +312,7 @@ add를 sum에 담는 로직인데 외부에서 add를 호출하려고 하면 할
 
 이 때문에 이름을 빼는 것이 좋다는 것이다.
 
-## 표현식과 선언식의 차이 : Hoisting
+## <mark style="background: #BBFABBA6;">표현식과 선언식의 차이 : Hoisting</mark>
 
 [[2. Execution Context]]
 
@@ -331,7 +332,7 @@ var hello = function () {
 hello();
 ```
 
-## Function 생성자
+## <mark style="background: #FFF3A3A6;">Function 생성자</mark>
 
 ```js
 const add = new Function("a", "b", "return a+ b");
@@ -341,7 +342,7 @@ add(10, 24);
 
 실제 코딩에서 사용되진 않는다. (클로저도 안 생김)
 
-## 화살표 함수
+## <mark style="background: #FFF3A3A6;">화살표 함수</mark>
 
 ES6 신 문법
 
@@ -436,9 +437,9 @@ var hello = function hello(){
 }
 ```
 
-## 리액트에서 자주 쓰이는 함수의 종류
+## <mark style="background: #FFB86CA6;">리액트에서 자주 쓰이는 함수의 종류</mark>
 
-## 즉시 실행 함수
+## <mark style="background: #FFF3A3A6;">즉시 실행 함수</mark>
 
 IIFE (Imediate Invoked Function Expression)  함수를 정의하고 그 순간 즉시 실행되는 함수
 
@@ -459,7 +460,7 @@ IIFE (Imediate Invoked Function Expression)  함수를 정의하고 그 순간 �
 
 재사용되지 앟는 함수이고 단 한번만 실행된다는 특징으로 리팩토링에 도움을 줄 수 있다.
 
-## 고차 함수
+## <mark style="background: #FFF3A3A6;">고차 함수</mark>
 
 함수를 인수로 받거나 결과로 새로운 함수를 반환시키는 함수 (Higher Order Function)
 
@@ -484,9 +485,9 @@ add(1)(3)
 
 컴포넌트 내부에서 공통으로 관리되는 로직을 분리해 관리할 수 있어 효율적 리팩토링이 가능하다.
 
-## 함수를 사용할 때 주의 사항
+## <mark style="background: #FFB86CA6;">함수를 사용할 때 주의 사항</mark>
 
-## 함수의 sideEffect를 줄여라
+## <mark style="background: #FFF3A3A6;">함수의 sideEffect를 줄여라</mark>
 
 sideEffect : 함수 내의 작동으로 인해 함수가 아닌 함수 외부에 영향을 끼치는 것
 
@@ -515,7 +516,7 @@ API호출하는 로직이 컴포넌트 내에 있다면 외부에 영향(HTTP re
 
 이를 통해 함수의 역할을 좁히고 버그를 줄이며 컴포넌트의 안정성을 높일 수 있다.
 
-## 가능한 한 함수를 작게 만들어라
+## <mark style="background: #FFF3A3A6;">가능한 한 함수를 작게 만들어라</mark>
 
 ESLint에는 `max-lines-per-function`이라는 규칙이 있다.
 
@@ -524,7 +525,7 @@ ESLint에는 `max-lines-per-function`이라는 규칙이 있다.
 하나의 함수에서 너무나 많은 일을 하지 않게 하는 것이 좋다는 거다.
 (Do One Thing and Do It Well)
 
-## 누구나 이해할 수 있는 이름을 붙여라
+## <mark style="background: #FFF3A3A6;">누구나 이해할 수 있는 이름을 붙여라</mark>
 
 Terser로 한글로 변수명, 함수명 작성해도 되게 만들어 줄 수 있음.
 
@@ -538,13 +539,13 @@ useEffect(function apiRequest(){
 
 기능적으로 다른 건 크게 없지만 (디버깅 이외에) 가독성에 도움이 된다.
 
-## 클래스
+## <mark style="background: #FF5582A6;">클래스</mark>
 
 16.8 이전까지는 리액트의 모든 컴포넌트는 Class였다.
 
 과거의 코드를 읽고 개선하기 위해서는 클래스에 대한 내용 역시 알고 있어야 한다.
 
-## 개념
+## <mark style="background: #FFB86CA6;">개념</mark>
 
 클래스 : 특정한 객체를 만들기 위한 일종의 템플릿과 같은 개념, 특정한 형태의 객체를 반복적으로 만들기 위해 사용되는 것
 
@@ -596,13 +597,13 @@ myCar.age = 32;
 console.log(myCar.age, myCar.name); // 32 자동차
 ```
 
-## constructor
+## <mark style="background: #FFF3A3A6;">constructor</mark>
 
 생성자 그 자체, 객체를 생성하는 데 사용하는 특수한 메서드
 
 단 하나만 존재할 수 있고 생략해도 되는 로직이면 생략해도 된다.
 
-## Property
+## <mark style="background: #FFF3A3A6;">Property</mark>
 
 클래스로 인스턴스를 생성할 때 내부에 정의할 수 있는 속성값
 
@@ -610,7 +611,7 @@ JS 자체적으로는 ES2019의 `#`prefix를 이용한 private 프로퍼티를 �
 
 TS에서는 protected, private, public을 명시적으로 사용가능하다.
 
-## getter와 setter
+## <mark style="background: #FFF3A3A6;">getter와 setter</mark>
 
 `get`과 `set` 선언어를 이용해서 구현한다.
 
@@ -651,7 +652,7 @@ console.log(myCar.firstCharacter, myCar.name);
 // 차, 차동차(firstCharacter에 의해서)
 ```
 
-## instance method
+## <mark style="background: #FFF3A3A6;">instance method</mark>
 
 클래스 내부에서 선언한 메서드
 
@@ -689,7 +690,7 @@ myCar.__proto__ // {constructor: f, hello: f}
 
 프로토타입 체이닝으로 인해서 클래스에 선언한 `hello()` Method를 instance에서 호출할 수 있고, 이 메서드 내부에서 `this`도 접근해 사용할 수 있게 된다.
 
-## static method
+## <mark style="background: #FFF3A3A6;">static method</mark>
 
 클래스의 이름으로 호출할 수 있는 메서드
 
@@ -712,7 +713,7 @@ react class component life cycle method인 static getDerivedStateFromProps(props
 
 인스턴스를 생성하지 않아도 사용할 수 있고 여러 곳에서 재사용이 가능하다는 장점이 있다. 애플리케이션 전역에서 사용하는 유틸 함수를 정적 메서드로 많이 활용한다.
 
-## inheritance
+## <mark style="background: #FFF3A3A6;">inheritance</mark>
 
 리액트에서 클래스 컴포넌트를 만들기 위해 extends React.Component, extends React.PureComponent를 선언한다.
 
@@ -746,7 +747,7 @@ const myTruck = new Truck("테슬라");
 myTruck.honk(); // 테슬라가 경적을 울린다.
 ```
 
-## 클래스와 함수의 관계
+## <mark style="background: #FFB86CA6;">클래스와 함수의 관계</mark>
 
 클래스는 ES6에 나온 개념으로 이전에는 프로토타입으로 작동 방식을 동일하게 구현했었다.
 
@@ -806,13 +807,13 @@ var Car = (function () {
 })();
 ```
 
-## 클로저
+## <mark style="background: #FF5582A6;">클로저</mark>
 
 함수 컴포넌트에 대한 이해는 클로저에 달려 있다.
 
 함수 컴포넌트의 구조와 작동 방식, 훅의 원리, 의존성 배열 등 함수 컴포넌트의 대부분의 기술이 모두 클로저에 의존하고 있다.
 
-## 개념
+## <mark style="background: #FFB86CA6;">개념</mark>
 
 > 함수와 함수가 선언된 어휘적 환경(Lexical Scope)의 조합 
 
@@ -835,11 +836,11 @@ innerAdd가 add 안에 선언되었기 때문에 a에 접근할 수 있게 되�
 
 `this`와 다르게 코드가 작성된 순간에 정적으로 결정된다.
 
-## 스코프
+## <mark style="background: #FFF3A3A6;">스코프</mark>
 
 변수의 유효 범위
 
-## Global Scope
+## <mark style="background: #BBFABBA6;">Global Scope</mark>
 
 전역 레벨에서 선언하는 것
 
@@ -854,7 +855,7 @@ console.log(global) // global scope
 hello()
 console.log(global === window.global) // true
 ```
-## Function Scope
+## <mark style="background: #BBFABBA6;">Function Scope</mark>
 
 JS는 기본적으로 함수 레벨 스코프를 따른다.
 
@@ -881,7 +882,7 @@ console.log(local) // Uncaught ReferenceError: local is not defined
 
 함수 단위일 경우 함수 레벨 스코프에 따라서 밖에서는 접근이 되지 않게 된다.
 
-## 중첩 스코프일 경우
+## <mark style="background: #BBFABBA6;">중첩 스코프일 경우</mark>
 
 ```js
 var x = 10;
@@ -903,7 +904,7 @@ foo(); // 100 1000
 
 x의 위치에 따라 값이 달라지게 된다.
 
-## 클로저의 활용
+## <mark style="background: #FFB86CA6;">클로저의 활용</mark>
 
 ```js
 function outerFunction() {
@@ -923,7 +924,7 @@ innerFunction();
 
 해당 함수가 선언된 어휘적 환경, 즉 outerFunction에는 x라는 변수가 존재하며 접근할 수 있게 된다.
 
-## JS에서의 클로저
+## <mark style="background: #FFF3A3A6;">JS에서의 클로저</mark>
 
 ```js
 var counter = 0
@@ -968,9 +969,9 @@ console.log(c.counter()); // 1
 1. 외부에서는 변수에 직접 접근 못하게 만들 수 있다. (counter())
 2. 변수를 무분별하게 수정하는 것을 제한했다. (increase(), decrease())
 
-## 리액트에서의 클로저
+## <mark style="background: #FFF3A3A6;">리액트에서의 클로저</mark>
 
-## useState
+## <mark style="background: #BBFABBA6;">useState</mark>
 
 ```jsx
 function Component(){
@@ -987,11 +988,11 @@ function Component(){
 }
 ```
 
-외부 함수(useState)가 반환한 내부 함수(setState)는 외부 함수(useState)의 호출이 끝남음에도 자신이 선언된 외부 함수가 선언된 어휘적
+외부 함수(useState)가 반환한 내부 함수(setState)는 외부 함수(useState)의 호출이 끝났음에도 자신이 선언된 외부 함수가 선언된 어휘적
 
 환경(state가 있는 스코프)를 기억하기 때문에 state 값을 활용할 수 있게 된다.
 
-## 클로저 주의사항
+## <mark style="background: #FFB86CA6;">클로저 주의사항</mark>
 
 ```js
 for (var i = 0; i < 5; i++) {
@@ -1010,9 +1011,9 @@ for (var i = 0; i < 5; i++) {
 모든 for문을 돌고 task queue에 있는 setTimeout을 실행하면 이미 5로 되어 있다. 
 (전역 스코프에 있는 i는 for문을 돌리면서 올라가기 때문에)
 
-## 해결 방법
+## <mark style="background: #FFF3A3A6;">해결 방법</mark>
 
-## `let`을 사용해서 i를 블록레벨 스코프로 바꾸기
+## <mark style="background: #BBFABBA6;">let을 사용해서 i를 블록레벨 스코프로 바꾸기</mark>
 
 ```js
 for (let i = 0; i < 5; i++) {
@@ -1024,7 +1025,7 @@ for (let i = 0; i < 5; i++) {
 
 전역 스코프가 아닌 블록 안에서 `let i` 가 선언되었기 때문에 가능한 일이다.
 
-## 클로저를 이용해서 해결
+## <mark style="background: #BBFABBA6;">클로저를 이용해서 해결</mark>
 
 ```js
 for (var i = 0; i < 5; i++) {
@@ -1051,7 +1052,7 @@ for문이 반복될 때마다 setTimeout의 콜백 함수를 가져오는 과정
 
 ![[Deep dive 1_240525_134937.jpg]]
 
-## 클로저를 사용하는데 드는 비용
+## <mark style="background: #BBFABBA6;">클로저를 사용하는데 드는 비용</mark>
 
 클로저는 생성될 때마다 그 선언적 환경을 기억해야 하므로 추가로 비용이 발생한다.
 
@@ -1102,7 +1103,7 @@ bButton.addEventListener("click", function () {
 
 않는다면 성능에 악영향을 미친다.
 
-## 이벤트 루프와 비동기 통신의 이해
+## <mark style="background: #FF5582A6;">이벤트 루프와 비동기 통신의 이해</mark>
 
 JS는 싱글 스레드에서 작동한다. 그래서 한 번에 하나의 작업만 동기 방식으로 처리할 수 있다.
 
@@ -1114,25 +1115,25 @@ JS는 싱글 스레드에서 작동한다. 그래서 한 번에 하나의 작업
 
 리액트에서는 16 버전에 접어들면서 비동기식으로 작동하는 방법이 소개 되었다.
 
-## 싱글 스레드 자바스크립트
+## <mark style="background: #FFB86CA6;">싱글 스레드 자바스크립트</mark>
 
 과거, 프로그램을 실행하는 단위가 오직 프로세스 뿐이었다.
 
 process : 프로그램을 구동해 프로그램의 상태가 메모리 상에서 실행되는 작업 단위
 
-현재, 하나의 프로그램에 여러가지 작업이 필요해 졌고 더 작은 실행 단위인 thread가 탄생했다.
+현재, 하나의 프로그램에 여러가지 작업이 필요해졌고 더 작은 실행 단위인 thread가 탄생했다.
 
-thread: 하나의 process에는 여러 개의 thread를 만들 수 있고, thread 끼리는 메모리를 공유할 수 있다. 여러 작업 동시 수행
+thread: 하나의 process에는 여러 개의 thread를 만들 수 있고, thread 끼리 메모리를 공유할 수 있다. 여러 작업 동시 수행
 
 JS는 기본적으로 싱글 쓰레드 이다.
 
-## JS가 멀티 쓰레드가 아닌 이유
+## <mark style="background: #FFF3A3A6;">JS가 멀티 쓰레드가 아닌 이유</mark>
 
 1. 멀티 쓰레드는 내부적으로 처리가 복잡하며 같은 자원에 대해 여러 번 수정하는 등 동시성 문제가 발생할 수 있기에 이에 대한 처리가 필요하다.
 2. 각각 격리되어 있는 process와 다르게 하나의 thread가 문제가 생기면 다른 thread도 문제가 발생할 수 있다.
 3. JS이 멀티 스레딩을 지원해서 동시에 여러 쓰레드가 DOM을 조작할 수 있었다면 메모리 공유로 인해 동시에 같은 자원에 접근하게 되고  이 때문에 타이밍 이슈가 발생할 수 있고 DOM 표시에 큰 문제를 야기할 수 있다.
 
-## 싱글 쓰레드
+## <mark style="background: #FFF3A3A6;">싱글 쓰레드</mark>
 
 자바스크립트 코드의 실행이 하나의 스레드에서 순차적으로 이루어진다는 것을 의미
 
@@ -1142,15 +1143,15 @@ JS에서는 동기식과 다르게 비동기식 함수를 선언하면 요청 > 
 
 이 과정은 "이벤트 루프" 라는 개념을 통해 설명할 수 있다.
 
-## 이벤트 루프
+## <mark style="background: #BBFABBA6;">이벤트 루프</mark>
 
 JS 런타임 외부에서 자바스크립트의 비동기 실행을 돕기 위해 만들어진 장치
 
 런타임 외부라 하면 V8 같은 js 런타임 엔진 같은 외부 요소들을 뜻한다.
 
-## 호출 스택
+## <mark style="background: #ABF7F7A6;">호출 스택</mark>
 
-## 동기적 코드
+## <mark style="background: #ADCCFFA6;">동기적 코드</mark>
 
 call stack은 JS에서 수행해야 할 코드나 함수를 순차적으로 담아두는 스택
 
@@ -1177,7 +1178,7 @@ foo()
 
 이는 순차적으로 단일 스레드에서 일어난다. (동시에 일어날 수 없다.)
 
-## 비동기적 코드
+## <mark style="background: #ADCCFFA6;">비동기적 코드</mark>
 
 ```js
 function bar() {
@@ -1201,7 +1202,7 @@ foo();
 
 위 그림을 보면 setTimeout이 0초 후에 실행되는 걸로 코드에는 적혀 있지만 비동기기 때문에 보장되지 않는다는 것을 알 수 있다.
 
-## Task Queue
+## <mark style="background: #D2B3FFA6;">Task Queue</mark>
 
 선택된 큐 중 실행 가능한 가장 오래된 task를 가져와야 하기 때문에 `set` 자료구조를 사용한다.
 
@@ -1215,7 +1216,7 @@ Task queue에서 실행해야할 task는 비동기 함수의 callback function�
 
  setTimeout이나 fetch같은 네트워크 요청, 이런 비동기 함수의 수행은 task queue가 할당하는 별도의 thread에서 수행된다. (브라우저나 Node.js같은 Web API에서 해당 코드가 실행되고 콜백이 task queue로 들어간다.)
 
-## Micro Task Queue
+## <mark style="background: #D2B3FFA6;">Micro Task Queue</mark>
 
 이벤트 루프의 구성 요소중 하나이며 Task queue와 다른 task를 처리한다.
 
@@ -1241,13 +1242,13 @@ setTimeout(foo, 0);
 Promise.resolve().then(bar).then(baz);
 ```
 
-## Task Queue와 Micro Task Queue의 차이
+## <mark style="background: #D2B3FFA6;">Task Queue와 Micro Task Queue의 차이</mark>
 
 | 이름             | 대표 작업                                                    |
 | ---------------- | :----------------------------------------------------------- |
 | task queue       | setTimeout, setInterval, setImmediate                        |
 | micro task queue | process.nextTick, Promises, queueMicroTask, MutationObserver |
-## 렌더링 시기
+## <mark style="background: #ABF7F7A6;">렌더링 시기</mark>
 
 ```js
 for (let i = 0; i <= 100000; i++) {
@@ -1297,17 +1298,17 @@ window.requestAnimationFrame(() => {
 // 브라우저 렌더링은 Micro task queue와 task queue 사이에서 일어난다.
 ```
 
-## React와 관련된 JS 문법
+## <mark style="background: #FF5582A6;">React와 관련된 JS 문법</mark>
 
 브라우저의 종류는 다양하기 때문에 모든 최신 문법을 사용할 수 없다. 
 
 이를 해결하기 위해서 바벨이라는 도구가 등장하였고 이 도구는 최신 문법을 설정된 버전으로 트랜스파일링해주는 역할을 한다.
 
-## 구조 분해 할당
+## <mark style="background: #FFB86CA6;">구조 분해 할당</mark>
 
 배열 또는 객체의 값을 분해해 개별 변수에 즉시 할당하는 것
 
-## 배열의 구조 분해 할당
+## <mark style="background: #FFF3A3A6;">배열의 구조 분해 할당</mark>
 
 ```js
 const array = [1,2,3,4,5]
@@ -1361,7 +1362,7 @@ const arrayRest2 = array.slice(3);
 
 배열의 구조 분해 할당은 바벨에서 위와 같이 사용된다.
 
-## 객체의 구조 분해 할당
+## <mark style="background: #FFF3A3A6;">객체의 구조 분해 할당</mark>
 
 객체에서 값을 꺼내온 뒤 할당하는 것
 
@@ -1409,11 +1410,11 @@ Sample({a:3, b:5}) // 8
 
 바벨에서 트랜스파일링시 번들링 크기가 굉장히 크기 때문에 ES5을 고려해야한다면 lodash.omit이나 rambda.omt 같은 라이브러리를 사용해보면 좋다.
 
-## Spread Syntax
+## <mark style="background: #FFB86CA6;">Spread Syntax</mark>
 
 배열이나 객체, 문자열과 같이 순회할 수 있는 값에 대해 말 그대로 전개해 간결하게 사용할 수 있는 구문
 
-## Array Spread Syntax
+## <mark style="background: #FFF3A3A6;">Array Spread Syntax</mark>
 
 ```js
 const arr1 = ["a", "b"];
@@ -1430,7 +1431,7 @@ arr1 === arr2;
 
 기존 배열에 영향을 미치지 않고 배열을 복사할 수 있다.
 
-## Object Spread Syntax
+## <mark style="background: #FFF3A3A6;">Object Spread Syntax</mark>
 
 ```js
 const obj1 = { a: 1, b: 2 };
@@ -1468,7 +1469,7 @@ var arr2 = [].concat(arr1, ['c','d','e'])
 
 트랜스파일링이 필요할 경우 주의해야 한다.
 
-## Object shorthand assignment
+## <mark style="background: #FFB86CA6;">Object shorthand assignment</mark>
 
 객체를 선언할 때 객체에 넣고자 하는 key, value를 가지고 있는 변수가 이미 있다면 간결하게 넣어주는 방식
 
@@ -1486,9 +1487,9 @@ const obj = {
 
 트랜스파일 이후에도 큰 부담이 없다. `const obj = {a:a, b:b}`
 
-## Array prototype method
+## <mark style="background: #FFB86CA6;">Array prototype method</mark>
 
-## map
+## <mark style="background: #FFF3A3A6;">map</mark>
 
 인수로 전달받은 배열과 똑같은 길이의 새로운 배열을 반환
 
@@ -1506,7 +1507,7 @@ const Elements = arr.map((item) => {
 });
 ```
 
-## filter
+## <mark style="background: #FFF3A3A6;">filter</mark>
 
 인수로 받은 콜백 함수가 truthy 조건일 경우에만 해당 원소를 반환하는 메서드
 
@@ -1515,7 +1516,7 @@ const arr = [1, 2, 3, 4, 5];
 const evenArr = arr.filter((v) => v % 2 === 0);
 ```
 
-## reduce
+## <mark style="background: #FFF3A3A6;">reduce</mark>
 
 콜백 함수, 초깃값을 갖고 배열이나 객체, 또는 그 외의 다른 무언가를 반환
 
@@ -1544,7 +1545,7 @@ const result2 = arr.reduce((result, item) => {
   return result;
 }, []);
 ```
-## forEach
+## <mark style="background: #FFF3A3A6;">forEach</mark>
 
 배열을 순회하면서 콜백 함수를 실행하는 method
 
@@ -1576,7 +1577,7 @@ run(); // 1 finished 2 3
 
 무조건 O(n)이 실행된다는 이야기이기 때문에 최적화시 고려해야할 사항 중 하나이다.
 
-## 삼항 조건 연산자
+## <mark style="background: #FFB86CA6;">삼항 조건 연산자</mark>
 
 ```js
 const value = 10;
@@ -1594,7 +1595,7 @@ function Component({ condition }) {
 
 가독성이 안 좋기 때문에 삼항 조건 연산자를 중첩해서 사용하는 것은 지양하는 것이 좋다.
 
-## TS
+## <mark style="background: #FF5582A6;">TS</mark>
 
 동적 언어인 JS는 실행했을 때만 에러를 확인할 수 있는데 TS는 타입 체크를 정적으로 런타임이 아닌 빌드(트랜스파일) 타임에 수행할 수 있게 해주어 코드 안정성을 늘린다.
 
@@ -1605,12 +1606,12 @@ function test(a:number, b:number){
 
 // tsc로 이 코드를 JS로 트랜스파일하면 다음과 같은 에러가 난다.
 test('안녕하세요', '하이' )
-// Argument of type 'string' iss not assignable to parameter of type 'number'
+// Argument of type 'string' is not assignable to parameter of type 'number'
 ```
 
-## React에서 TS 활용
+## <mark style="background: #FFB86CA6;">React에서 TS 활용</mark>
 
-## any 대신 unknown 사용
+## <mark style="background: #FFF3A3A6;">any 대신 unknown 사용</mark>
 
 `any`는  TS를 포기하겠다는 것이다. 따라서 대신 `unknown`을 사용하는 것이 좋은데 이는 모든 값을 할당할 수는 있지만 바로 사용할 수는 없게 된다.
 
@@ -1673,9 +1674,9 @@ export default function App() {
 }
 ```
 
-## type guard 적극 활용
+## <mark style="background: #FFB86CA6;">type guard 적극 활용</mark>
 
-## instanceof 와 typeof
+## <mark style="background: #FFF3A3A6;">instanceof 와 typeof</mark>
 
 `instanceof`는 지정한 인스턴스가 특정 클래스의 인스턴스인지 확인할 수 있는 연산자이다.
 
@@ -1737,7 +1738,7 @@ function logging(value: string | undefined){
 }
 ```
 
-## in
+## <mark style="background: #FFF3A3A6;">in</mark>
 
 property in object로 사용되는데, 어떤 객체에 키가 존재하는지 확인하는 용도로 사용
 
@@ -1763,7 +1764,7 @@ function doSchool(person: Student | Teacher) {
 }
 ```
 
-## Generic
+## <mark style="background: #FFB86CA6;">Generic</mark>
 
 함수나 클래스 내부에서 단일 타입이 아닌 다양한 타입에 대응할 수 있도록 도와주는 도구
 
@@ -1807,7 +1808,7 @@ a // string
 b // boolean
 ```
 
-## Index Signiture
+## <mark style="background: #FFB86CA6;">Index Signiture</mark>
 
 `[typeName: type]:type`으로 키에 원하는 타입을 부여할 수 있다. 
 
@@ -1829,7 +1830,7 @@ hello['안녕'] //undefined
 
 따라서 동적으로 선언시키는 것을 지양하고 객체의 타입도 좁혀주는 것이 좋다.
 
-## Record 사용
+## <mark style="background: #FFF3A3A6;">Record 사용</mark>
 
 ```ts
 type Hello = Record<"hello" | "hi", string>;
@@ -1839,7 +1840,7 @@ const hello: Hello = {
 };
 ```
 
-## 타입을 사용해서 좁힌 index signature
+## <mark style="background: #FFF3A3A6;">타입을 사용해서 좁힌 index signature</mark>
 
 
 ```ts
@@ -1850,7 +1851,7 @@ const hello: Hello = {
 }
 ```
 
-## mapping시 주의사항
+## <mark style="background: #FFB86CA6;">mapping시 주의사항</mark>
 
 ```ts
 Object.keys(hello).map((key)=>{
@@ -1901,15 +1902,15 @@ Object.keys(hello).map((key)=>{
 })
 ```
 
-## Object.keys를 string[]을 내보내도록 만든 이유
+## <mark style="background: #FFF3A3A6;">Object.keys를 string[]을 내보내도록 만든 이유</mark>
 
 Duck Typing: 오리처럼 걷고 헤엄치고 소리 내면 무엇이든 오리라고 부를 수 있다. (객체가 필요한 변수와 메서드만 지니고 있으면 해당 타입에 속하도록 인정)
 
 JS는 객체의 타입에 구애 받지 않고 객체의 타입에 열려 있다. 그래서 TS도 그 특징을 맞춰 줘야 하며 모든 키가 들어올 수 있다는 가능성이 열려 있는 key에 포괄적으로 대응하기 위해 `string[]`으로 타입을 제공하는 것이다.
 
-## TS 전환 가이드
+## <mark style="background: #FF5582A6;">TS 전환 가이드</mark>
 
-## tsconfig.json 먼저 작성하기
+## <mark style="background: #FFB86CA6;">tsconfig.json 먼저 작성하기</mark>
 
 ```json
 {
@@ -1926,7 +1927,7 @@ JS는 객체의 타입에 구애 받지 않고 객체의 타입에 열려 있다
 }
 ```
 
-## JSDoc와 @ts-check를 활용해 점진적으로 전환하기
+## <mark style="background: #FFB86CA6;">JSDoc와 @ts-check를 활용해 점진적으로 전환하기</mark>
 
 ```js
 // @ts-check
@@ -1941,7 +1942,7 @@ const str = true
 
 하지만 손이 많이 가기 때문에 ts로 바로 작업하는 편이 빠르다.
 
-## 타입 기반 라이브러리를 위한 @types 모듈 설치
+## <mark style="background: #FFB86CA6;">타입 기반 라이브러리를 위한 @types 모듈 설치</mark>
 
 `@types` TS로 작성되지 않은 코드에 대한 타입을 제공하는 라이브러리
 
@@ -1949,7 +1950,7 @@ ex) React의 경우 @types/react, @types/react-dom 에 정의
 
 Cannot find module 'lodash' or its corresponding type declarations 라는 오류 메시지를 import에서 보면 이 라이브러리를 설치해야 되는 상태인 것이다.
 
-## 파일 단위로 조금씩 전환하기
+## <mark style="background: #FFB86CA6;">파일 단위로 조금씩 전환하기</mark>
 
 상수나 유틸처럼 별도의 의존성이 없는 파일부터 시작하자
 
